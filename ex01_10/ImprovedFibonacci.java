@@ -1,28 +1,21 @@
-import java.util.ArrayList;
 
 public class ImprovedFibonacci {
 	static final int MAX_SIZE = 25;
-	static int index;
-	//static Number[] numbers = new Number[MAX_SIZE];
+	static Number[] numbers = new Number[MAX_SIZE];
 	
 	public static void main(String[] args) {
-		//Number[] numbers = new Number[MAX_SIZE];
-		//Number numbers = new Number();
-		ArrayList<Number> numbers = new ArrayList<Number>();
-		int lo = 2;
+		int lo = 1;
 		int hi = 1;
 
-		//numbers[MAX_SIZE - 1].setValue(lo);
-		//numbers[0].setValue(lo);
-		numbers.get(0).setValue(lo);
-		System.out.println(numbers.get(0).toString());
-		index = MAX_SIZE - 2;
-		for (int i = MAX_SIZE - 1; i >= 0; i--) {
-			//numbers[index].setValue(hi);
+		numbers[0] = new Number(lo);
+		for (int i = 1; i < MAX_SIZE; i++) {
+			numbers[i] = new Number(hi);
 			hi = lo + hi;
 			lo = hi - lo;
 		}
 		
-		//System.out.println(numbers[0].toString());
+		for (int i = 0; i < MAX_SIZE; i++) {
+			System.out.println((i + 1) + ": " + numbers[i]);
+		}
 	}
 }
