@@ -5,9 +5,11 @@ public class MyUtilities {
 	public double [] getDataSet(String setName) throws BadDataSetException {
 		String file = setName + ".dset";
 		FileInputStream in = null;
+		double[] data = null;
 		try {
 			in = new FileInputStream(file);
-			return readDataSet(in);
+			data = readDataSet(in);
+			return data;
 		} catch (IOException e) {
 			throw new BadDataSetException(e);
 		} finally {
@@ -15,7 +17,7 @@ public class MyUtilities {
 				if (in != null)
 					in.close();
 			} catch (IOException e) {
-				;
+				throw new BadDataSetException(e, data);
 			}
 		}
 	}
