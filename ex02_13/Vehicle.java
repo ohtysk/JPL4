@@ -2,7 +2,7 @@
 public class Vehicle {
 	private double speed;
 	private double direction;
-	private String firstOwner;
+	private final String firstOwner;
 	private static int nextId = 0;
 	private final int id;
 	
@@ -17,13 +17,9 @@ public class Vehicle {
 		System.out.printf("maxid = %d%n", getMaxId());
 	}
 	
-	public Vehicle() {
+	public Vehicle(String firstOwner) {
 		id = nextId;
 		nextId++;
-	}
-	
-	public Vehicle(String firstOwner) {
-		this();
 		this.firstOwner = firstOwner;
 	}
 	
@@ -41,10 +37,6 @@ public class Vehicle {
 	
 	public double getDirection() {
 		return direction;
-	}
-	
-	public void setFirstOwner(String firstOwner) {
-		this.firstOwner = firstOwner;
 	}
 	
 	public String getFirstOwner() {
