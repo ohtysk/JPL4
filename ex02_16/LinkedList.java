@@ -8,6 +8,11 @@ public class LinkedList {
 	public LinkedList(Object value) {
 		this.value = value;
 	}
+
+	public LinkedList(Object value, LinkedList next) {
+		this.value = value;
+		this.next = next;
+	}
 	
 	public LinkedList(Object... values) {
 		int length = values.length;
