@@ -1,4 +1,5 @@
 
+
 public class Vehicle {
 	private double speed;
 	private double direction;
