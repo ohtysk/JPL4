@@ -1,5 +1,7 @@
 package ex03_01;
 
+import Vehicle;
+
 public class PssengerVehicle extends Vehicle {
 	private final int seatNumber;
 	private int currentNumberPassenger = 0;
