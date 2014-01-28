@@ -1,18 +1,26 @@
 
 
 
+
 public class Vehicle {
 	private double speed;
 	private double direction;
 	private String firstOwner;
 	private static int nextId = 0;
 	private final int id;
-	private EnergySource energySource;
 	public static final int TURN_LEFT = 1;
 	public static final int TURN_RIGHT = 2;
 	
-	
 	public static void main(String[] args) {
+		String name = "";
+		for (int i = 0; i < args.length; i++) {
+			System.out.println(args[i]);
+			name += args[i] + " ";
+		}
+		Vehicle a = new Vehicle(name);
+		a.setSpeed(0.5);
+		a.setDirection(1.5);
+		System.out.printf("%s%n", a);
 	}
 	
 	public Vehicle() {
@@ -23,21 +31,6 @@ public class Vehicle {
 	public Vehicle(String firstOwner) {
 		this();
 		this.firstOwner = firstOwner;
-	}
-	
-	public void setEnergySource(EnergySource source) {
-		energySource = source;
-	}
-	
-	public boolean start() {
-		if (energySource == null) {
-			return false;
-		}
-		if (energySource.empty()) {
-			return false;
-		}
-		// 以下スタート処理
-		return true;
 	}
 	
 	public void setSpeed(double speed) {
