@@ -44,14 +44,47 @@ public class DigitalClock extends Frame {
 		timer = new Timer();
 		task = new DigitalClockTask();
 		timer.schedule(task, timerDelay, timerInterval);
+
 		this.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent event) {
-				dispose();
-				System.out.println("exit");
-				timer.cancel();
-				System.exit(0);
+				close();
 			}
 		});
+		
+		this.addKeyListener(new KeyListener() {
+
+			@Override
+			public void keyPressed(KeyEvent arg0) {
+				// TODO Auto-generated method stub
+				System.out.println(arg0);
+				switch(arg0.getKeyCode()) {
+				case 0x1b:
+					close();
+					break;
+				default:
+					break;
+				}
+			}
+
+			@Override
+			public void keyReleased(KeyEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void keyTyped(KeyEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+	}
+	
+	private void close() {
+		dispose();
+		System.out.println("exit");
+		timer.cancel();
+		System.exit(0);
 	}
 	
 	public void paint(Graphics g) {
