@@ -1,15 +1,15 @@
 
 
 
-public class PssengerVehicle extends Vehicle {
+public class PassengerVehicle extends Vehicle {
 	private final int seatNumber;
 	private int currentNumberPassenger = 0;
 	
-	PssengerVehicle(int seatNumber)  {
+	PassengerVehicle(int seatNumber)  {
 		this.seatNumber = seatNumber;
 	}
 
-	PssengerVehicle(String firstOwner, int seatNumber)  {
+	PassengerVehicle(String firstOwner, int seatNumber)  {
 		super(firstOwner);
 		this.seatNumber = seatNumber;
 	}
@@ -22,9 +22,9 @@ public class PssengerVehicle extends Vehicle {
 	}
 	
 	public static void main(String argv[]) {
-		PssengerVehicle pv1 = new PssengerVehicle(5);
-		PssengerVehicle pv2 = new PssengerVehicle("watashidesu", 6);
-		PssengerVehicle pv3 = new PssengerVehicle(5);
+		PassengerVehicle pv1 = new PassengerVehicle(5);
+		PassengerVehicle pv2 = new PassengerVehicle("watashidesu", 6);
+		PassengerVehicle pv3 = new PassengerVehicle(5);
 		
 		System.out.println(pv1);
 		System.out.println(pv2);
