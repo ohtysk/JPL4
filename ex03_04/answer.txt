@@ -1,0 +1,3 @@
+3.4 もし、あるとしたら、VehicleとPassengerVehicleのどのメソッドをfinalにするのが適切か。
+
+toString()以外のメソッドは振る舞いが完全に決定しているのでfinalにすべき
