@@ -1,0 +1,16 @@
+3.8 Vehicle と PassengerVehicle を Cloneable 型にしなさい。複製に関して４つの選択肢のどれを選択すべきでしょうか。
+ Object.clone による単純なコピーは、それらのクラスの cloneメソッドとして正しいですか。
+ 
+4つの選択肢
+	Vehicle
+		 一番上
+	PassengerVehicle
+		一番上
+ 
+ 単純なコピーについて
+ 	Vehicle
+ 		ID, speed, direction は単純コピーではだめ
+ 	PassengerVehicle
+ 		上に追加して
+ 		seatNumberは単純なコピーでよい
+ 		currentNumberPassengerは単純なコピーではだめ
