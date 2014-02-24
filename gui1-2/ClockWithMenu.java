@@ -2,14 +2,17 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class ClockWithMenu extends Frame {
+	private Frame self;
 	private MenuItem propertiesItem;
 	private MenuItem quitItem;
 	private MenuItemListener menuItemListener = new MenuItemListener();
 	private FontManager fontManager = new FontManager();
+	private TimePanel timePanel = new TimePanel();
 	
 	public ClockWithMenu(String title) {
 		// TODO Auto-generated constructor stub
 		super(title);
+		self = this;
 		
 		MenuBar menubar = new MenuBar();
 
@@ -27,6 +30,7 @@ public class ClockWithMenu extends Frame {
 		quitItem.addActionListener(menuItemListener);
 		propertiesItem.addActionListener(menuItemListener);
 		
+		add(timePanel);
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent event) {
 				dispose();
@@ -39,6 +43,33 @@ public class ClockWithMenu extends Frame {
 		ClockWithMenu clock = new ClockWithMenu("ClockWithMenu");
 		clock.setBounds(100, 100, 200, 200);
 		clock.show();
+	}
+	
+	class TimePanel extends Panel {
+		private String text = "2014/02/24 19:56:29";
+		public void setText(String text) {
+			this.text = text;
+		}
+		
+		public void paint(Graphics g) {
+			Insets insets = self.getInsets();
+			FontMetrics fm = g.getFontMetrics();
+			int sw = fm.stringWidth(text);
+			int height = fm.getHeight();
+			int descent = fm.getDescent();
+			int x = insets.left + sw / 4;
+			int y = (height - descent) * 3 / 2;
+			
+			self.setSize(insets.left + insets.right + sw * 3 / 2, insets.top + insets.bottom + height * 2);
+			System.out.println("sw=" + sw);
+			System.out.println("text=" + text);
+			System.out.println("sw=" + sw);
+			System.out.println("height=" + height);
+			System.out.println("descent=" + descent);
+
+			g.setColor(getForeground());
+			g.drawString(text, x, y);
+		}
 	}
 	
 	class MenuItemListener implements ActionListener {
@@ -80,6 +111,7 @@ public class ClockWithMenu extends Frame {
 				public void actionPerformed(ActionEvent arg0) {
 					// TODO Auto-generated method stub
 					fontManager.backupIndexes();
+					timePanel.setFont(fontManager.getSelectedFont());
 					dispose();
 				}
 			});
