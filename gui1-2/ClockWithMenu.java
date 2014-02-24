@@ -1,18 +1,32 @@
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.TimeZone;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class ClockWithMenu extends Frame {
+	private final int timerDelay    = 100;
+	private final int timerInterval = 100;
+
 	private Frame self;
 	private MenuItem propertiesItem;
 	private MenuItem quitItem;
 	private MenuItemListener menuItemListener = new MenuItemListener();
 	private FontManager fontManager = new FontManager();
 	private TimePanel timePanel = new TimePanel();
-	
+	private Timer timer;
+	private TimerTask task;
+
 	public ClockWithMenu(String title) {
 		// TODO Auto-generated constructor stub
 		super(title);
 		self = this;
+
+		timer = new Timer();
+		task = new DigitalClockTask();
+		timer.schedule(task, timerDelay, timerInterval);
 		
 		MenuBar menubar = new MenuBar();
 
@@ -49,12 +63,12 @@ public class ClockWithMenu extends Frame {
 	}
 	
 	class TimePanel extends Panel {
-		private String text = "2014/02/24 19:56:29";
+		private String text = "0000/00/00 00:00:00";
 		public void setText(String text) {
 			this.text = text;
 		}
 		
-		public void paint(Graphics g) {
+		public void paint(Graphics g) {			
 			Insets insets = self.getInsets();
 			FontMetrics fm = g.getFontMetrics();
 			int sw = fm.stringWidth(text);
@@ -62,16 +76,15 @@ public class ClockWithMenu extends Frame {
 			int descent = fm.getDescent();
 			int x = insets.left + sw / 4;
 			int y = (height - descent) * 3 / 2;
-			
-			self.setSize(insets.left + insets.right + sw * 3 / 2, insets.top + insets.bottom + height * 2);
-			System.out.println("sw=" + sw);
-			System.out.println("text=" + text);
-			System.out.println("sw=" + sw);
-			System.out.println("height=" + height);
-			System.out.println("descent=" + descent);
 
-			g.setColor(getForeground());
-			g.drawString(text, x, y);
+			self.setSize(insets.left + insets.right + sw * 3 / 2, insets.top + insets.bottom + height * 2);
+			Dimension size = getSize();
+			Image offImage = createImage(size.width, size.height);
+			Graphics offGraphics = offImage.getGraphics(); 
+			offGraphics.setColor(getForeground());
+			offGraphics.drawString(text, x, y);
+
+			g.drawImage(offImage, 0, 0, this);
 		}
 	}
 	
@@ -252,5 +265,13 @@ public class ClockWithMenu extends Frame {
 			textColorList.select(currentTextColor);
 			backColorList.select(currentBackColor);
 		}
+	}
+	
+	class DigitalClockTask extends TimerTask {
+		@Override
+		public void run() {
+	        timePanel.setText((new Date()).toLocaleString());
+			timePanel.repaint();
+		}		
 	}
 }
