@@ -30,6 +30,9 @@ public class ClockWithMenu extends Frame {
 		quitItem.addActionListener(menuItemListener);
 		propertiesItem.addActionListener(menuItemListener);
 		
+		timePanel.setFont(fontManager.getSelectedFont());
+		timePanel.setForeground(fontManager.getSelectedTextColor());
+		timePanel.setBackground(fontManager.getSelectedBackColor());
 		add(timePanel);
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent event) {
@@ -112,6 +115,8 @@ public class ClockWithMenu extends Frame {
 					// TODO Auto-generated method stub
 					fontManager.backupIndexes();
 					timePanel.setFont(fontManager.getSelectedFont());
+					timePanel.setForeground(fontManager.getSelectedTextColor());
+					timePanel.setBackground(fontManager.getSelectedBackColor());
 					dispose();
 				}
 			});
@@ -139,37 +144,58 @@ public class ClockWithMenu extends Frame {
 	class FontPanel extends Panel {
 		public FontPanel() {
 			add(fontManager.getFamilyList());
-			add(fontManager.getStyleList());
 			add(fontManager.getSizeList());			
+			add(fontManager.getTextColorList());			
+			add(fontManager.getBackColorList());
 		}
 	}
 	
 	class FontManager {
+		private final Color[] COLORS = {
+				Color.BLACK, Color.BLUE, Color.CYAN, Color.DARK_GRAY, 
+				Color.GRAY, Color.GREEN, Color.LIGHT_GRAY, Color.MAGENTA,
+				Color.ORANGE, Color.PINK, Color.RED, Color.WHITE, Color.YELLOW
+		};
+		
+		private final String[] COLORS_NAME = {
+				"black", "blue", "cyan", "dark_gray",
+				"gray", "green", "light_gray", "magenta",
+				"orange", "pink", "red", "white", "yellow"
+		};
+
 		private List familyList = new List();
-		private List styleList = new List();
 		private List sizeList = new List();
+		private List textColorList = new List();
+		private List backColorList = new List();
 		
 		private int currentFamily = 0;
-		private int currentStyle = 0;
-		private int currentSize = 0;
+		private int currentSize = 5;
+		private int currentTextColor = 0;
+		private int currentBackColor = COLORS.length - 2;
 
 		public FontManager() {
 			populateFamilies();
-			populateStyles();
 			populateSizes();
+			populateTextColors();
+			populateBackColors();
 			
-			familyList.select(currentFamily);
-			styleList.select(currentStyle);
-			sizeList.select(currentSize);
+			rollbackIndexes();
 		}
 		
-		public  Font getSelectedFont() {
+		public Font getSelectedFont() {
 			String family = familyList.getSelectedItem();
-			int style = sizeList.getSelectedIndex();
 			int size = Integer.parseInt(sizeList.getSelectedItem());
-			return new Font(family, style, size);
+			return new Font(family, 0, size);
 		}
-					
+
+		public Color getSelectedTextColor() {
+			return COLORS[currentTextColor];
+		}
+		
+		public Color getSelectedBackColor() {
+			return COLORS[currentBackColor];
+		}
+		
 		private void populateFamilies() {
 			String fontNames[] = getToolkit().getFontList();
 			for (int i = 0; i < fontNames.length; i++) {
@@ -177,43 +203,54 @@ public class ClockWithMenu extends Frame {
 			}
 		}
 		
-		private void populateStyles() {
-			styleList.add("Plain");
-			styleList.add("Bold");
-			styleList.add("Italic");
-			styleList.add("BoldItalic");
-		}
-		
 		private void populateSizes() {
-			String sizes[] = {"12", "14", "16", "18", "24", "36", "48"};
+			String sizes[] = {"12", "14", "16", "18", "24", "30", "36", "48", "60"};
 			
 			for (int i = 0; i < sizes.length; i++) {
 				sizeList.add(sizes[i]);
 			}
 		}
 		
-		public List getFamilyList() {
-			return familyList;
+		private void populateTextColors() {
+			for (int i = 0; i < COLORS_NAME.length; i++) {
+				textColorList.add(COLORS_NAME[i].toString());
+			}
 		}
 		
-		public List getStyleList() {
-			return styleList;
+		private void populateBackColors() {
+			for (int i = 0; i < COLORS_NAME.length; i++) {
+				backColorList.add(COLORS_NAME[i].toString());
+			}			
+		}
+		
+		public List getFamilyList() {
+			return familyList;
 		}
 		
 		public List getSizeList() {
 			return sizeList;
 		}
 		
+		public List getTextColorList() {
+			return textColorList;
+		}
+		
+		public List getBackColorList() {
+			return backColorList;
+		}
+		
 		private void backupIndexes() {
 			currentFamily = familyList.getSelectedIndex();
-			currentStyle = styleList.getSelectedIndex();
 			currentSize = sizeList.getSelectedIndex();
+			currentTextColor = textColorList.getSelectedIndex();
+			currentBackColor = backColorList.getSelectedIndex();
 		}
 		
 		private void rollbackIndexes() {
 			familyList.select(currentFamily);
-			styleList.select(currentStyle);
 			sizeList.select(currentSize);
+			textColorList.select(currentTextColor);
+			backColorList.select(currentBackColor);
 		}
 	}
 }
