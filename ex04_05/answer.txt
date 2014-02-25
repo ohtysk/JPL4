@@ -1,0 +1,13 @@
+4.5 次の型がインターフェース、抽象クラス、具象クラスのどれで表現すべきか
+
+(a)TreeNode
+interface
+
+(b)TreeWalker
+抽象クラス
+
+(c)Drawable
+抽象クラス
+
+(d)Application
+具象クラス
