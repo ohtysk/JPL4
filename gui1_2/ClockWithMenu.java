@@ -270,7 +270,7 @@ public class ClockWithMenu extends Frame {
 	class DigitalClockTask extends TimerTask {
 		@Override
 		public void run() {
-	        timePanel.setText((new Date()).toLocaleString());
+			timePanel.setText((new Date()).toLocaleString());
 			timePanel.repaint();
 		}		
 	}
