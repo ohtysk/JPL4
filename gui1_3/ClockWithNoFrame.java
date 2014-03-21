@@ -155,7 +155,7 @@ public class ClockWithNoFrame extends Window {
 			if (foregroundColor != null) {
 				return foregroundColor;
 			}
-			foregroundColor = new RadioMenu("Foreground Menu", true);
+			foregroundColor = new RadioMenu("Foreground Color", true);
 			for (int i = 0; i < COLORS_NAME.length; i++) {
 				CheckboxMenuItem item = new CheckboxMenuItem(COLORS_NAME[i].toString());
 				foregroundColor.add(item);
@@ -170,7 +170,7 @@ public class ClockWithNoFrame extends Window {
 			if (backgroundColor != null) {
 				return backgroundColor;
 			}
-			backgroundColor = new RadioMenu("Background Menu", true);
+			backgroundColor = new RadioMenu("Background Color", true);
 			for (int i = 0; i < COLORS_NAME.length; i++) {
 				CheckboxMenuItem item = new CheckboxMenuItem(COLORS_NAME[i].toString());
 				backgroundColor.add(item);
