@@ -1,5 +1,5 @@
 
-public class SyncronisedObject {
+public class SynchronizedObject {
 	int value = 0;
 
 	synchronized void addAndPrint(int other) {

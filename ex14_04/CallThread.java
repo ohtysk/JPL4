@@ -1,11 +1,9 @@
 
 public class CallThread implements Runnable {
-	private final SynchronizedObject object;
 	private final int addValue;
 	private final int spanMsec;
 
-	CallThread(SynchronizedObject object, int addValue, int spanMsec) {
-		this.object = object;
+	CallThread(int addValue, int spanMsec) {
 		this.addValue = addValue;
 		this.spanMsec = spanMsec;
 	}
@@ -17,7 +15,7 @@ public class CallThread implements Runnable {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			object.addAndPrint(addValue);
+			SynchronizedObject.addAndPrint(addValue);
 		}
 	}	
 }
