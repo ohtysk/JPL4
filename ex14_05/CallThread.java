@@ -17,7 +17,7 @@ public class CallThread implements Runnable {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			object.addAndPrint(addValue);
+			object.subAndPrint(addValue);
 		}
 	}	
 }

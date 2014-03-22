@@ -1,11 +1,11 @@
 
 public class SynchronizedObject {
-	int value = 0;
+	int value = 999999;
 	private final Object lock = new Object();
 
-	void addAndPrint(int other) {
+	void subAndPrint(int other) {
 		synchronized (lock) {
-			value += other;
+			value -= other;
 			System.out.println(value);
 		}
 	}

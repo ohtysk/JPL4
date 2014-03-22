@@ -14,8 +14,8 @@ public class SynchronizedObjectTest {
 				new Thread(new CallThread(object, (int)pow(10, i), 10)).start();
 			}
 		
-			Thread.sleep(80);
-			assertEquals(999999, object.value);
+			Thread.sleep(100);
+			assertEquals(0, object.value);
 		}
 	}
 
