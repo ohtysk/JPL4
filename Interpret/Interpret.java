@@ -9,16 +9,35 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.JList;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextPane;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
+
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.HashSet;
+
+import javax.swing.JScrollPane;
 
 
 public class Interpret {
-
+	
+	private Class<?> type = null;
+	private Object object = null;
+	JTextPane textPane = new JTextPane();
+	Document log = textPane.getDocument();
+	private ConstructorPanel constructorPanel =  new ConstructorPanel();
+	private MethodPanel methodPanel = new MethodPanel();
+	private FieldPanel fieldPanel = new FieldPanel();
 	private JFrame frmInterpret;
 	private JTextField textField;
 	private JTextField textField_1;
@@ -46,6 +65,51 @@ public class Interpret {
 		initialize();
 	}
 
+	private void confirmType() {
+		String text = textField.getText();
+		try {
+			log.insertString(log.getLength(), text + "を確認します\n", null);
+			type = Class.forName(text);
+			log.insertString(log.getLength(), type.getName() + "を確認成功しました\n", null);
+			object = null;
+		} catch (Exception e) {
+			try {
+				type = null;
+				log.insertString(log.getLength(), text + "を確認できませんでした\n", null);
+				log.insertString(log.getLength(), e.toString() + "\n", null);
+			} catch (BadLocationException e1) {
+				e1.printStackTrace();
+			}
+		}
+		updateMembers();
+	}
+	private void updateMembers() {
+		if (type != null) {
+			Object[] constructorObjects = uniqueMerge(type.getConstructors(), type.getDeclaredConstructors());
+			Constructor[] constructors = new Constructor[constructorObjects.length];
+			for (int i = 0; i < constructors.length; i++) {
+				constructors[i] = (Constructor)constructorObjects[i];
+				constructorPanel.listModel.addElement(constructors[i].toString());
+			}
+
+			Object[] methodObjects = uniqueMerge(type.getMethods(), type.getDeclaredMethods());
+			Method[] methods = new Method[methodObjects.length];
+
+			Object[] fieldObjects = uniqueMerge(type.getFields(), type.getDeclaredFields());
+			Field[] fields = new Field[fieldObjects.length];
+
+		}
+	}
+	
+	private static Object[] uniqueMerge(Object[] as, Object[] bs) {
+		HashSet<Object> merged = new HashSet<Object>();
+		for (Object a : as)
+			merged.add(a);
+		
+		for (Object b : bs)
+			merged.add(b);
+		return merged.toArray();
+	}
 	/**
 	 * Initialize the contents of the frame.
 	 */
@@ -77,11 +141,21 @@ public class Interpret {
 		frmInterpret.getContentPane().add(lblType);
 		
 		textField = new JTextField();
+		textField.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				confirmType();
+			}
+		});
 		textField.setBounds(38, 17, 216, 19);
 		frmInterpret.getContentPane().add(textField);
 		textField.setColumns(10);
 		
 		JButton button = new JButton("\u78BA\u8A8D");
+		button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				confirmType();
+			}
+		});
 		button.setBounds(266, 15, 75, 23);
 		frmInterpret.getContentPane().add(button);
 		
@@ -99,14 +173,10 @@ public class Interpret {
 		
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		tabbedPane.setBounds(365, 17, 404, 339);
-		tabbedPane.add("コンストラクタ", new ConstructorPanel());
-		tabbedPane.add("メソッド", new MethodPanel());
-		tabbedPane.add("フィールド", new FieldPanel());
+		tabbedPane.add("コンストラクタ", constructorPanel);
+		tabbedPane.add("メソッド", methodPanel);
+		tabbedPane.add("フィールド", fieldPanel);
 		frmInterpret.getContentPane().add(tabbedPane);
-		
-		JTextPane textPane = new JTextPane();
-		textPane.setBounds(365, 391, 404, 124);
-		frmInterpret.getContentPane().add(textPane);
 		
 		JLabel label_1 = new JLabel("\u30ED\u30B0");
 		label_1.setBounds(365, 368, 50, 13);
@@ -128,5 +198,12 @@ public class Interpret {
 		JButton button_1 = new JButton("\u8A2D\u5B9A");
 		button_1.setBounds(266, 492, 75, 23);
 		frmInterpret.getContentPane().add(button_1);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(365, 391, 404, 119);
+		frmInterpret.getContentPane().add(scrollPane);
+		
+		textPane.setEditable(false);
+		scrollPane.setViewportView(textPane);
 	}
 }

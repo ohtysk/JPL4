@@ -1,23 +1,23 @@
+import javax.swing.DefaultListModel;
 import javax.swing.JPanel;
 import javax.swing.JList;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JButton;
+import javax.swing.JScrollPane;
+import javax.swing.ListModel;
 
 
 public class ConstructorPanel extends JPanel {
 	private JTextField textField;
 	private JTextField textField_1;
-
+	public DefaultListModel listModel = new DefaultListModel(); 
+	
 	/**
 	 * Create the panel.
 	 */
 	public ConstructorPanel() {
 		setLayout(null);
-		
-		JList list = new JList();
-		list.setBounds(12, 21, 367, 192);
-		add(list);
 		
 		JLabel label = new JLabel("\u5F15\u6570");
 		label.setBounds(12, 239, 50, 13);
@@ -44,6 +44,13 @@ public class ConstructorPanel extends JPanel {
 		JButton button_1 = new JButton("\u914D\u5217\u751F\u6210");
 		button_1.setBounds(286, 266, 93, 23);
 		add(button_1);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(12, 21, 367, 203);
+		add(scrollPane);
+		
+		JList list = new JList(listModel);
+		scrollPane.setViewportView(list);
 
 	}
 
