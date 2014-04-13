@@ -1,0 +1,15 @@
+ex09_04
+
+3 << 2L - 1                                        # ok int 6
+(3L << 2) - 1                                      # ok int 11
+10 < 12 == 6 > 17                                  # ok boolean false
+10 << 12 == 6 >> 17                                # ok bookean false
+13.5e-1 % Float.POSITIVE_INFINITY                  # ok Double NaN
+Float.POSITIVE_INFINITY + Double.NEGATIVE_INFINITY # ok Double NaN
+Double.POSITIVE_INFINITY - Float.NEGATIVE_INFINITY # ok Double NaN
+0.0 / - 0.0 == -0.0 / 0.0                          # ok Double NaN
+Integer.MAX_VALUE + Integer.MIN_VALUE              # ok Integer -1
+Long.MAX_VALUE + 5                                 # ok Long (Long.MIN_VALUE + 4)
+(short) 5 * (byte) 10                              # ok short 50
+(i < 15 ? 1.72e3f : 0)                             # ok float 1.72e3f or 0
+i++ + i++ + --i                                    # ok int 10
