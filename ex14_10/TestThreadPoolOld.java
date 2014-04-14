@@ -15,7 +15,7 @@ import org.junit.Test;
  * This is a Test class for ThreadPool class.
  * This class is written with JUnit 4.
  */
-public class TestThreadPool {
+public class TestThreadPoolOld {
 
 	/**
 	 * Simple counter task which counts the number of invocation of run() method.
@@ -217,7 +217,7 @@ public class TestThreadPool {
 		tp.stop();
 
 		long stopSpan = System.currentTimeMillis() - start;
-		assertEquals(true, sleepSpan * sizeOfQueue <= stopSpan && stopSpan <= sleepSpan * (sizeOfQueue + 1));
+		assertEquals(true, sleepSpan * sizeOfQueue <= stopSpan);
 	}
 	
 	@Test
