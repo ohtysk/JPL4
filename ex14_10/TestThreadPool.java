@@ -214,11 +214,11 @@ public class TestThreadPool {
 		for (int i = 0; i < sizeOfQueue; i++)
 			tp.dispatch(task);
 		long dispatchSpan = System.currentTimeMillis() - start;
-		assertEquals(true, dispatchSpan < sleepSpan);
 		
 		tp.stop();
 
 		long stopSpan = System.currentTimeMillis() - start;
+		assertEquals(true, dispatchSpan * sizeOfQueue < stopSpan);
 		assertEquals(true, sleepSpan * sizeOfQueue <= stopSpan);
 	}
 	
