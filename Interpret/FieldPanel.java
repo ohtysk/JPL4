@@ -1,13 +1,15 @@
+import javax.swing.DefaultListModel;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.JList;
+import javax.swing.JScrollPane;
 
 
 public class FieldPanel extends JPanel {
 	private JTextField textField;
-
+	public DefaultListModel listModel = new DefaultListModel(); 
 	/**
 	 * Create the panel.
 	 */
@@ -27,9 +29,12 @@ public class FieldPanel extends JPanel {
 		button.setBounds(286, 266, 93, 23);
 		add(button);
 		
-		JList list = new JList();
-		list.setBounds(12, 21, 367, 236);
-		add(list);
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(12, 21, 367, 236);
+		add(scrollPane);
+		
+		JList list = new JList(listModel);
+		scrollPane.setViewportView(list);
 
 	}
 

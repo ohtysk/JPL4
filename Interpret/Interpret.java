@@ -23,6 +23,8 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.Field;
+import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.util.HashSet;
 
@@ -83,21 +85,50 @@ public class Interpret {
 		}
 		updateMembers();
 	}
+	
+	private Constructor[] updateConstructors() {
+		Object[] constructorObjects = uniqueMerge(type.getConstructors(), type.getDeclaredConstructors());
+		Constructor[] constructors = new Constructor[constructorObjects.length];
+		for (int i = 0; i < constructors.length; i++) {
+			constructors[i] = (Constructor)constructorObjects[i];
+		}
+		return constructors;
+	}
+
+	private Method[] updateMethods() {
+		Object[] methodObjects = uniqueMerge(type.getMethods(), type.getDeclaredMethods());
+		Method[] methods = new Method[methodObjects.length];
+		for (int i = 0; i < methods.length; i++) {
+			methods[i] = (Method)methodObjects[i];
+		}
+		return methods;
+	}
+
+	private Field[] updateFields() {
+		Object[] fieldObjects = uniqueMerge(type.getFields(), type.getDeclaredFields());
+		Field[] fields = new Field[fieldObjects.length];
+		for (int i = 0; i < fields.length; i++) {
+			fields[i] = (Field)fieldObjects[i];
+		}
+		return fields;
+	}
+	
 	private void updateMembers() {
 		if (type != null) {
-			Object[] constructorObjects = uniqueMerge(type.getConstructors(), type.getDeclaredConstructors());
-			Constructor[] constructors = new Constructor[constructorObjects.length];
-			for (int i = 0; i < constructors.length; i++) {
-				constructors[i] = (Constructor)constructorObjects[i];
-				constructorPanel.listModel.addElement(constructors[i].toString());
-			}
+			Constructor[] constructors = updateConstructors();
+			constructorPanel.listModel.clear();
+			for (Member member : constructors)
+				constructorPanel.listModel.addElement(member.toString());
+			
+			Method[] methods = updateMethods();
+			methodPanel.listModel.clear();
+			for (Member member : methods)
+				methodPanel.listModel.addElement(member.toString());
 
-			Object[] methodObjects = uniqueMerge(type.getMethods(), type.getDeclaredMethods());
-			Method[] methods = new Method[methodObjects.length];
-
-			Object[] fieldObjects = uniqueMerge(type.getFields(), type.getDeclaredFields());
-			Field[] fields = new Field[fieldObjects.length];
-
+			Field[] fields = updateFields();
+			fieldPanel.listModel.clear();
+			for (Member member : fields)
+				fieldPanel.listModel.addElement(member.toString());
 		}
 	}
 	
