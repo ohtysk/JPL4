@@ -49,11 +49,11 @@ public class Interpret {
 	private JFrame frmInterpret;
 	private JTextField txtJavaawtbutton;
 	private JTextField textField_1;
-	public DefaultListModel objectListModel = new DefaultListModel(); 
-	private JList list = new JList(objectListModel);
-	public DefaultListModel arrayListModel = new DefaultListModel(); 
-	private JList list_1 = new JList(arrayListModel);
-
+	public final DefaultListModel objectListModel = new DefaultListModel(); 
+	private final JList list = new JList(objectListModel);
+	public final DefaultListModel arrayListModel = new DefaultListModel(); 
+	private final JList list_1 = new JList(arrayListModel);
+	public final Parser parser;
 	/**
 	 * Launch the application.
 	 */
@@ -77,9 +77,19 @@ public class Interpret {
 		constructorPanel =  new ConstructorPanel(this);
 		methodPanel = new MethodPanel(this);
 		fieldPanel = new FieldPanel(this);
+		parser = new Parser(this);
 		initialize();
 	}
+	
+	public Object getObjectFromList(int index) throws Exception {
+		return ((ListedObject)objectListModel.getElementAt(index)).getOject();
+	}
 
+	public Object getArrayElementFromList(int arrayIndex, int elementIndex) throws Exception {
+		Object array = ((ListedObject)objectListModel.getElementAt(arrayIndex)).getOject();
+		return Array.get(array, elementIndex);
+	}
+	
 	public Object getObject() {
 		return object;
 	}
@@ -180,6 +190,8 @@ public class Interpret {
 		}				
 		String str = textField_1.getText();
 		try {
+			
+			/*
 			int index = Integer.valueOf(str).intValue();
 			putLog(index + "");
 			if (index < 0 || objectListModel.capacity() <= index) {
@@ -189,13 +201,21 @@ public class Interpret {
 			ListedArray listedArray = (ListedArray)list_1.getSelectedValue();
 			Object element = ((ListedObject)objectListModel.elementAt(index)).getOject();
 			listedArray.setObject(element);
+			*/
+			Object element = parser.parse(str, void.class);
+			ListedArray listedArray = (ListedArray)list_1.getSelectedValue();
+			listedArray.setObject(element);
 			list_1.updateUI();
-			type = element.getClass();
-			txtJavaawtbutton.setText(type.getName());
+			if (element != null) {
+				type = element.getClass();
+				txtJavaawtbutton.setText(type.getName());
+			}
 			updateMembers();
 		} catch (NumberFormatException e) {
+			e.printStackTrace();
 			putLog("#n または #n[m] という形式でオブジェクトを指定してください。例 #3");			
-		} catch ( IllegalArgumentException | ArrayIndexOutOfBoundsException e) {
+		} catch (Exception e) {
+			e.printStackTrace();
 			putLog(e.toString());						
 		}
 	}

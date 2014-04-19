@@ -3,7 +3,7 @@ import java.lang.reflect.Array;
 
 public class ListedArray {
 	private Object object;
-	private Object array;
+	private final Object array;
 	private final int arrayIndex;
 	private final int elementIndex;
 
@@ -25,6 +25,10 @@ public class ListedArray {
 	
 	public Object getObject() {
 		return object;
+	}
+
+	public Object getArray() {
+		return array;
 	}
 		
 	public String toString() {
