@@ -10,6 +10,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
+import javax.swing.DefaultListModel;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JButton;
@@ -21,14 +22,19 @@ import javax.swing.text.Document;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.util.HashSet;
 
 import javax.swing.JScrollPane;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.ListSelectionModel;
 
 
 public class Interpret {
@@ -37,12 +43,16 @@ public class Interpret {
 	private Object object = null;
 	JTextPane textPane = new JTextPane();
 	Document log = textPane.getDocument();
-	private ConstructorPanel constructorPanel =  new ConstructorPanel();
-	private MethodPanel methodPanel = new MethodPanel();
-	private FieldPanel fieldPanel = new FieldPanel();
+	private final ConstructorPanel constructorPanel;
+	private final MethodPanel methodPanel;
+	private final FieldPanel fieldPanel;
 	private JFrame frmInterpret;
-	private JTextField textField;
+	private JTextField txtJavaawtbutton;
 	private JTextField textField_1;
+	public DefaultListModel objectListModel = new DefaultListModel(); 
+	private JList list = new JList(objectListModel);
+	public DefaultListModel arrayListModel = new DefaultListModel(); 
+	private JList list_1 = new JList(arrayListModel);
 
 	/**
 	 * Launch the application.
@@ -64,26 +74,41 @@ public class Interpret {
 	 * Create the application.
 	 */
 	public Interpret() {
+		constructorPanel =  new ConstructorPanel(this);
+		methodPanel = new MethodPanel(this);
+		fieldPanel = new FieldPanel(this);
 		initialize();
 	}
 
-	private void confirmType() {
-		String text = textField.getText();
+	public Object getObject() {
+		return object;
+	}
+	
+	public Class<?> getType() {
+		return type;
+	}
+	
+	public void putLog(String message) {
 		try {
-			log.insertString(log.getLength(), text + "を確認します\n", null);
+			log.insertString(log.getLength(), message + "\n", null);
+		} catch (BadLocationException e) {
+			e.printStackTrace();
+		}
+	}
+	private void confirmType() {
+		String text = txtJavaawtbutton.getText();
+		try {
 			type = Class.forName(text);
-			log.insertString(log.getLength(), type.getName() + "を確認成功しました\n", null);
+			putLog(text + "の確認が成功しました。");
 			object = null;
 		} catch (Exception e) {
-			try {
-				type = null;
-				log.insertString(log.getLength(), text + "を確認できませんでした\n", null);
-				log.insertString(log.getLength(), e.toString() + "\n", null);
-			} catch (BadLocationException e1) {
-				e1.printStackTrace();
-			}
+			type = null;
+			putLog(text + "の確認が失敗しました。");
+			putLog(e.toString());
 		}
 		updateMembers();
+		list.clearSelection();
+		object = null;
 	}
 	
 	private Constructor[] updateConstructors() {
@@ -114,24 +139,66 @@ public class Interpret {
 	}
 	
 	private void updateMembers() {
+		constructorPanel.listModel.clear();
+		methodPanel.listModel.clear();
+		fieldPanel.listModel.clear();
 		if (type != null) {
 			Constructor[] constructors = updateConstructors();
-			constructorPanel.listModel.clear();
 			for (Member member : constructors)
-				constructorPanel.listModel.addElement(member.toString());
+				constructorPanel.listModel.addElement(member);
 			
 			Method[] methods = updateMethods();
-			methodPanel.listModel.clear();
 			for (Member member : methods)
-				methodPanel.listModel.addElement(member.toString());
+				methodPanel.listModel.addElement(member);
 
 			Field[] fields = updateFields();
-			fieldPanel.listModel.clear();
 			for (Member member : fields)
-				fieldPanel.listModel.addElement(member.toString());
+				fieldPanel.listModel.addElement(member);
 		}
 	}
-	
+
+	private void updateArrayCore() {
+		int arrayIndex = ((ListedObject)list.getSelectedValue()).getIndex();
+		int length = Array.getLength(object);
+		for (int i = 0; i < length; i++) {
+			Object element = Array.get(object, i);
+			arrayListModel.addElement(new ListedArray(element, arrayIndex, i, object));
+		}		
+	}
+	private void updateArray() {
+		arrayListModel.clear();
+		if (!object.getClass().isArray()) {
+			return;
+		}
+		updateArrayCore();
+	}
+
+	private void setArray() {
+		if (list_1.isSelectionEmpty()) {
+			putLog("配列の要素が選択されていません。");
+			return;
+		}				
+		String str = textField_1.getText();
+		try {
+			int index = Integer.valueOf(str).intValue();
+			putLog(index + "");
+			if (index < 0 || objectListModel.capacity() <= index) {
+				putLog("指定されたオブジェクトがありません。");
+				return;
+			}
+			ListedArray listedArray = (ListedArray)list_1.getSelectedValue();
+			Object element = ((ListedObject)objectListModel.elementAt(index)).getOject();
+			listedArray.setObject(element);
+			list_1.updateUI();
+			type = element.getClass();
+			txtJavaawtbutton.setText(type.getName());
+			updateMembers();
+		} catch (NumberFormatException e) {
+			putLog("#n または #n[m] という形式でオブジェクトを指定してください。例 #3");			
+		} catch ( IllegalArgumentException | ArrayIndexOutOfBoundsException e) {
+			putLog(e.toString());						
+		}
+	}
 	private static Object[] uniqueMerge(Object[] as, Object[] bs) {
 		HashSet<Object> merged = new HashSet<Object>();
 		for (Object a : as)
@@ -144,7 +211,7 @@ public class Interpret {
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void initialize() {
+	private void initialize() {		
 		frmInterpret = new JFrame();
 		frmInterpret.setResizable(false);
 		frmInterpret.setTitle("Interpret");
@@ -171,15 +238,16 @@ public class Interpret {
 		lblType.setBounds(12, 20, 50, 13);
 		frmInterpret.getContentPane().add(lblType);
 		
-		textField = new JTextField();
-		textField.addActionListener(new ActionListener() {
+		txtJavaawtbutton = new JTextField();
+		txtJavaawtbutton.setText("java.awt.Button");
+		txtJavaawtbutton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				confirmType();
 			}
 		});
-		textField.setBounds(38, 17, 216, 19);
-		frmInterpret.getContentPane().add(textField);
-		textField.setColumns(10);
+		txtJavaawtbutton.setBounds(38, 17, 216, 19);
+		frmInterpret.getContentPane().add(txtJavaawtbutton);
+		txtJavaawtbutton.setColumns(10);
 		
 		JButton button = new JButton("\u78BA\u8A8D");
 		button.addActionListener(new ActionListener() {
@@ -189,10 +257,6 @@ public class Interpret {
 		});
 		button.setBounds(266, 15, 75, 23);
 		frmInterpret.getContentPane().add(button);
-		
-		JList list = new JList();
-		list.setBounds(38, 81, 303, 193);
-		frmInterpret.getContentPane().add(list);
 		
 		JLabel label = new JLabel("\u30AA\u30D6\u30B8\u30A7\u30AF\u30C8\u4E00\u89A7");
 		label.setBounds(12, 60, 199, 13);
@@ -213,20 +277,26 @@ public class Interpret {
 		label_1.setBounds(365, 368, 50, 13);
 		frmInterpret.getContentPane().add(label_1);
 		
-		JList list_1 = new JList();
-		list_1.setBounds(38, 317, 303, 165);
-		frmInterpret.getContentPane().add(list_1);
-		
 		JLabel label_2 = new JLabel("\u8981\u7D20");
 		label_2.setBounds(38, 497, 50, 13);
 		frmInterpret.getContentPane().add(label_2);
 		
 		textField_1 = new JTextField();
+		textField_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setArray();
+			}
+		});
 		textField_1.setBounds(92, 494, 162, 19);
 		frmInterpret.getContentPane().add(textField_1);
 		textField_1.setColumns(10);
 		
 		JButton button_1 = new JButton("\u8A2D\u5B9A");
+		button_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setArray();
+			}
+		});
 		button_1.setBounds(266, 492, 75, 23);
 		frmInterpret.getContentPane().add(button_1);
 		
@@ -236,5 +306,48 @@ public class Interpret {
 		
 		textPane.setEditable(false);
 		scrollPane.setViewportView(textPane);
+		
+		JScrollPane scrollPane_1 = new JScrollPane();
+		scrollPane_1.setBounds(38, 81, 303, 193);
+		frmInterpret.getContentPane().add(scrollPane_1);
+		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		
+		list.addListSelectionListener(new ListSelectionListener() {
+			public void valueChanged(ListSelectionEvent arg0) {
+				if (list.isSelectionEmpty()) {
+					return;
+				}
+				object = ((ListedObject)list.getSelectedValue()).getOject();
+				type = object.getClass();
+				txtJavaawtbutton.setText(type.getName());
+				updateMembers();
+				updateArray();
+			}
+		});
+		scrollPane_1.setViewportView(list);
+		
+		JScrollPane scrollPane_2 = new JScrollPane();
+		scrollPane_2.setBounds(38, 317, 303, 165);
+		frmInterpret.getContentPane().add(scrollPane_2);
+		list_1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		
+		list_1.addListSelectionListener(new ListSelectionListener() {
+			public void valueChanged(ListSelectionEvent arg0) {
+				if (list_1.isSelectionEmpty()) {
+					return;
+				}				
+				object = ((ListedArray)list_1.getSelectedValue()).getObject();
+				if (object == null) {
+					type = null;
+					txtJavaawtbutton.setText("");
+				} else {
+					type = object.getClass();
+					txtJavaawtbutton.setText(type.getName());
+				}
+				updateMembers();
+			}
+		});
+		scrollPane_2.setViewportView(list_1);
 	}
+
 }

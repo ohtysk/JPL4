@@ -5,16 +5,19 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.JScrollPane;
+import javax.swing.ListSelectionModel;
 
 
 public class MethodPanel extends JPanel {
 	private JTextField textField;
-	public DefaultListModel listModel = new DefaultListModel(); 
+	public DefaultListModel listModel = new DefaultListModel();
+	private final Interpret interpret;
 	/**
 	 * Create the panel.
 	 */
-	public MethodPanel() {
+	public MethodPanel(final Interpret interpret) {
 		setLayout(null);
+		this.interpret = interpret;
 		
 		JLabel label = new JLabel("\u5F15\u6570");
 		label.setBounds(12, 272, 50, 13);
@@ -34,6 +37,7 @@ public class MethodPanel extends JPanel {
 		add(scrollPane);
 		
 		JList list = new JList(listModel);
+		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		scrollPane.setViewportView(list);
 
 	}
