@@ -98,8 +98,6 @@ public class ConstructorPanel extends JPanel {
 			Object[] params = interpret.parser.parse(arg, constructor);
 			Object object = constructor.newInstance(params);
 			interpret.objectListModel.addElement(new ListedObject(object));
-		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException e) {
-			interpret.putLog(e.toString());
 		} catch (InvocationTargetException e) {
 			interpret.putLog(e.getCause().toString());
 		} catch (Exception e) {
