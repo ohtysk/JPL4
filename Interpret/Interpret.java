@@ -29,6 +29,9 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashSet;
 
 import javax.swing.JScrollPane;
@@ -226,8 +229,25 @@ public class Interpret {
 		
 		for (Object b : bs)
 			merged.add(b);
-		return merged.toArray();
+		Object[] uniqued = merged.toArray();
+		return sort(uniqued);
 	}
+	
+	@SuppressWarnings("unchecked")
+	private static Object[] sort(Object[] uniqued) {
+		Arrays.sort(uniqued, new Comparator() {
+			@Override
+			public int compare(Object arg0, Object arg1) {
+				Member m0 = (Member)arg0;
+				Member m1 = (Member)arg1;
+				int value = m0.getName().compareTo(m1.getName());
+				if (value != 0) return value;
+				return m0.toString().compareTo(m1.toString());
+			}		
+		});
+		return uniqued;
+	}
+
 	/**
 	 * Initialize the contents of the frame.
 	 */
