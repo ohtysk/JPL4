@@ -61,7 +61,8 @@ public class FieldPanel extends JPanel {
 						if (object == null) {
 							interpret.putLog(field.getName() + "はオブジェクトが選択されていないためアクセスできません。");
 						} else {
-							textField.setText(field.get(interpret.getObject()).toString());
+							Object getted = field.get(interpret.getObject());
+							textField.setText(getted == null ? "null" : getted.toString());
 						}
 					}
 				} catch (IllegalArgumentException | IllegalAccessException e1) {
