@@ -79,14 +79,20 @@ public class Parser {
 	}
 
 	public Object[] parse(String input, Type[] params) throws Exception {
+		System.out.println(input);
+		if (params.length == 0) {
+			if (input.equals("")) return null;
+			throw new IllegalArgumentException();			
+		}
+
 		String[] splitedInput = input.split(",");
 		if (splitedInput.length != params.length) {
 			throw new IllegalArgumentException();
 		}
 		
 		Object[] objects = new Object[splitedInput.length];
-		
 		for (int i = 0; i < splitedInput.length; i++) {
+			System.out.println("splitedInput=" + splitedInput[i] + " type=" + params[i]);
 			objects[i] = parse(splitedInput[i], params[i]);
 		}
 		return objects;

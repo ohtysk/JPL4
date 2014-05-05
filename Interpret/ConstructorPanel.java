@@ -94,12 +94,17 @@ public class ConstructorPanel extends JPanel {
 		Constructor constructor = (Constructor) list.getSelectedValue();
 		interpret.putLog(constructor.toString());
 		try {
-			Object object = constructor.newInstance((Object[])null);
+			String arg = textField.getText();
+			Object[] params = interpret.parser.parse(arg, constructor);
+			Object object = constructor.newInstance(params);
 			interpret.objectListModel.addElement(new ListedObject(object));
 		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException e) {
 			interpret.putLog(e.toString());
 		} catch (InvocationTargetException e) {
 			interpret.putLog(e.getCause().toString());
+		} catch (Exception e) {
+			interpret.putLog(e.toString());			
+			e.printStackTrace();
 		}		
 	}
 	
