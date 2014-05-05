@@ -3,6 +3,7 @@ import java.awt.event.ActionListener;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JPanel;
@@ -55,7 +56,6 @@ public class MethodPanel extends JPanel {
 		
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		scrollPane.setViewportView(list);
-
 	}
 	
 	private void callMethod() {
@@ -68,7 +68,12 @@ public class MethodPanel extends JPanel {
 		try {
 			String arg = textField.getText();
 			Object[] params = interpret.parser.parse(arg, method);
-			Object ret = method.invoke(interpret.getObject(), params);
+			Object object = interpret.getObject();
+			if (object == null && !Modifier.isStatic(method.getModifiers())) {
+				interpret.putLog("オブジェクトが選択されていません。");
+				return;
+			}
+			Object ret = method.invoke(object, params);
 			if (ret == null) {
 				interpret.putLog("return null");
 			} else {
@@ -78,7 +83,7 @@ public class MethodPanel extends JPanel {
 			interpret.putLog(e.getCause().toString());
 		} catch (Exception e) {
 			interpret.putLog(e.toString());			
-			e.printStackTrace();
+			//e.printStackTrace();
 		}		
 
 	}

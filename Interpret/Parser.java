@@ -53,7 +53,7 @@ public class Parser {
 		} else if (param == String.class) {
 			return input;
 		} else {
-			System.out.println(input);
+			//System.out.println(input);
 			if (input.equals("null") || input.equals("")) return null;
 
 			int sharpPosition = input.indexOf('#');
@@ -72,14 +72,14 @@ public class Parser {
 				int arrayIndex = Integer.parseInt(arrayString);
 				String elementString = input.substring(bracketStart + 1, bracketEnd);
 				int elementIndex = Integer.parseInt(elementString);
-				System.out.println(arrayIndex + " " + elementIndex);
+				//System.out.println(arrayIndex + " " + elementIndex);
 				return interpret.getArrayElementFromList(arrayIndex, elementIndex);
 			}
 		}
 	}
 
 	public Object[] parse(String input, Type[] params) throws Exception {
-		System.out.println(input);
+		//System.out.println(input);
 		if (params.length == 0) {
 			if (input.equals("")) return null;
 			throw new IllegalArgumentException();			
@@ -92,7 +92,7 @@ public class Parser {
 		
 		Object[] objects = new Object[splitedInput.length];
 		for (int i = 0; i < splitedInput.length; i++) {
-			System.out.println("splitedInput=" + splitedInput[i] + " type=" + params[i]);
+			//System.out.println("splitedInput=" + splitedInput[i] + " type=" + params[i]);
 			objects[i] = parse(splitedInput[i], params[i]);
 		}
 		return objects;

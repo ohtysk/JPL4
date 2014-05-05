@@ -102,7 +102,7 @@ public class ConstructorPanel extends JPanel {
 			interpret.putLog(e.getCause().toString());
 		} catch (Exception e) {
 			interpret.putLog(e.toString());			
-			e.printStackTrace();
+			//e.printStackTrace();
 		}		
 	}
 	
