@@ -50,9 +50,9 @@ public class Interpret {
 	private JTextField txtJavaawtbutton;
 	private JTextField textField_1;
 	public final DefaultListModel objectListModel = new DefaultListModel(); 
-	private final JList list = new JList(objectListModel);
+	public final JList objectList = new JList(objectListModel);
 	public final DefaultListModel arrayListModel = new DefaultListModel(); 
-	private final JList list_1 = new JList(arrayListModel);
+	public final JList arrayList = new JList(arrayListModel);
 	public final Parser parser;
 	/**
 	 * Launch the application.
@@ -117,7 +117,7 @@ public class Interpret {
 			putLog(e.toString());
 		}
 		updateMembers();
-		list.clearSelection();
+		objectList.clearSelection();
 		object = null;
 	}
 	
@@ -168,14 +168,14 @@ public class Interpret {
 	}
 
 	private void updateArrayCore() {
-		int arrayIndex = ((ListedObject)list.getSelectedValue()).getIndex();
+		int arrayIndex = ((ListedObject)objectList.getSelectedValue()).getIndex();
 		int length = Array.getLength(object);
 		for (int i = 0; i < length; i++) {
 			Object element = Array.get(object, i);
 			arrayListModel.addElement(new ListedArray(element, arrayIndex, i, object));
 		}		
 	}
-	private void updateArray() {
+	public void updateArray() {
 		arrayListModel.clear();
 		if (!object.getClass().isArray()) {
 			return;
@@ -184,7 +184,7 @@ public class Interpret {
 	}
 
 	private void setArray() {
-		if (list_1.isSelectionEmpty()) {
+		if (arrayList.isSelectionEmpty()) {
 			putLog("配列の要素が選択されていません。");
 			return;
 		}				
@@ -203,9 +203,9 @@ public class Interpret {
 			listedArray.setObject(element);
 			*/
 			Object element = parser.parse(str, void.class);
-			ListedArray listedArray = (ListedArray)list_1.getSelectedValue();
+			ListedArray listedArray = (ListedArray)arrayList.getSelectedValue();
 			listedArray.setObject(element);
-			list_1.updateUI();
+			arrayList.updateUI();
 			if (element != null) {
 				type = element.getClass();
 				txtJavaawtbutton.setText(type.getName());
@@ -330,33 +330,33 @@ public class Interpret {
 		JScrollPane scrollPane_1 = new JScrollPane();
 		scrollPane_1.setBounds(38, 81, 303, 193);
 		frmInterpret.getContentPane().add(scrollPane_1);
-		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		objectList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
-		list.addListSelectionListener(new ListSelectionListener() {
+		objectList.addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent arg0) {
-				if (list.isSelectionEmpty()) {
+				if (objectList.isSelectionEmpty()) {
 					return;
 				}
-				object = ((ListedObject)list.getSelectedValue()).getOject();
+				object = ((ListedObject)objectList.getSelectedValue()).getOject();
 				type = object.getClass();
 				txtJavaawtbutton.setText(type.getName());
 				updateMembers();
 				updateArray();
 			}
 		});
-		scrollPane_1.setViewportView(list);
+		scrollPane_1.setViewportView(objectList);
 		
 		JScrollPane scrollPane_2 = new JScrollPane();
 		scrollPane_2.setBounds(38, 317, 303, 165);
 		frmInterpret.getContentPane().add(scrollPane_2);
-		list_1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		arrayList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
-		list_1.addListSelectionListener(new ListSelectionListener() {
+		arrayList.addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent arg0) {
-				if (list_1.isSelectionEmpty()) {
+				if (arrayList.isSelectionEmpty()) {
 					return;
 				}				
-				object = ((ListedArray)list_1.getSelectedValue()).getObject();
+				object = ((ListedArray)arrayList.getSelectedValue()).getObject();
 				if (object == null) {
 					type = null;
 					txtJavaawtbutton.setText("");
@@ -367,7 +367,7 @@ public class Interpret {
 				updateMembers();
 			}
 		});
-		scrollPane_2.setViewportView(list_1);
+		scrollPane_2.setViewportView(arrayList);
 	}
 
 }

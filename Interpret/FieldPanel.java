@@ -1,4 +1,8 @@
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 
 import javax.swing.DefaultListModel;
@@ -30,11 +34,21 @@ public class FieldPanel extends JPanel {
 		label.setBounds(12, 272, 50, 13);
 		add(label);
 		
+		textField.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				setField();
+			}
+		});
 		textField.setColumns(10);
 		textField.setBounds(55, 269, 220, 19);
 		add(textField);
 		
 		JButton button = new JButton("\u8A2D\u5B9A");
+		button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				setField();
+			}
+		});
 		button.setBounds(286, 266, 93, 23);
 		add(button);
 		
@@ -75,4 +89,24 @@ public class FieldPanel extends JPanel {
 
 	}
 
+	void setField() {
+		if (list.isSelectionEmpty()) {
+			interpret.putLog("フィールドが選択されていません。");
+			return;
+		}
+		Field field = (Field) list.getSelectedValue();
+		try {
+			String arg = textField.getText();
+			Object param = interpret.parser.parse(arg, field);
+			field.setAccessible(true);
+			field.set(interpret.getObject(), param);
+			interpret.objectList.updateUI();
+		} catch (InvocationTargetException e) {
+			interpret.putLog(e.getCause().toString());
+		} catch (Exception e) {
+			interpret.putLog(e.toString());			
+			//e.printStackTrace();
+		}		
+
+	}
 }
