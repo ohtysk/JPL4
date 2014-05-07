@@ -256,7 +256,8 @@ public class Interpret {
 		frmInterpret.setResizable(false);
 		frmInterpret.setTitle("Interpret");
 		frmInterpret.setBounds(100, 100, 789, 583);
-		frmInterpret.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmInterpret.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		//frmInterpret.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		JMenuBar menuBar = new JMenuBar();
 		frmInterpret.setJMenuBar(menuBar);
@@ -268,7 +269,7 @@ public class Interpret {
 		mntmQuit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				frmInterpret.dispose();
-				System.exit(0);
+				//System.exit(0);
 			}
 		});
 		mnNewMenu.add(mntmQuit);
