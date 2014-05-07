@@ -32,12 +32,12 @@ public class Parser {
 			} else if (input.equals("false") || input.equals("False") || input.equals("f")) {
 				return false;
 			} 
-			throw new Exception();//‰ðŽß‚Å‚«‚È‚¢
+			throw new Exception("parser error: can't interpret " + input);//‰ðŽß‚Å‚«‚È‚¢
 		} else if (param == byte.class || param == Byte.class) {
 	    	return Byte.valueOf(input);
 		} else if (param == char.class || param == Character.class){
 			if (input.length() != 1) {
-				throw new Exception();//char‚¶‚á‚È‚¢
+				throw new Exception("parser error: not char");//char‚¶‚á‚È‚¢
 			}
 			return Character.valueOf(input.charAt(0));
 		} else if (param == short.class || param == Short.class) {
@@ -57,7 +57,7 @@ public class Parser {
 			if (input.equals("null") || input.equals("")) return null;
 
 			int sharpPosition = input.indexOf('#');
-			if (sharpPosition != 0) throw new Exception();
+			if (sharpPosition != 0) throw new Exception("parser error: sharp position is wrong.");
 
 			int bracketStart = input.indexOf('[');
 
@@ -67,7 +67,7 @@ public class Parser {
 				return interpret.getObjectFromList(index);
 			} else {//element of array
 				int bracketEnd = input.indexOf(']');
-				if (bracketEnd == -1) throw new Exception();
+				if (bracketEnd == -1) throw new Exception("parser error: end bracket is missing.");
 				String arrayString = input.substring(1, bracketStart);
 				int arrayIndex = Integer.parseInt(arrayString);
 				String elementString = input.substring(bracketStart + 1, bracketEnd);
