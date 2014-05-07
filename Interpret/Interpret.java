@@ -273,6 +273,14 @@ public class Interpret {
 			}
 		});
 		mnNewMenu.add(mntmQuit);
+		JMenuItem mntmSystemQuit = new JMenuItem("システム終了");
+		mntmSystemQuit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				frmInterpret.dispose();
+				System.exit(0);
+			}
+		});
+		mnNewMenu.add(mntmSystemQuit);
 		frmInterpret.getContentPane().setLayout(null);
 		
 		JLabel lblType = new JLabel("\u578B");
