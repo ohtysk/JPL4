@@ -1,8 +1,6 @@
 
 public class Converter {
-	public String convert(String input) {
-		int step = 3;
-		String delim = ",";
+	public String convert(String input, String delim, int step) {
 		int length = input.length();
 		int end = length % step;
 		StringBuilder buf = new StringBuilder();
