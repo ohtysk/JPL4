@@ -16,16 +16,12 @@ public class LineFilterReader extends FilterReader {
 		int c;
 		int target = 0;
 
-	  newline:
-		while (true) {
-			while ((c = super.read()) != -1) {
-				cbuf[off + target] = (char)c;
-				target++;
-				if (c == '\n' || target == len) break newline;
-			}
-			if (c != -1) break;
+		while ((c = super.read()) != -1) {
+			cbuf[off + target] = (char)c;
+			target++;
+			if (c == '\n' || target == len) break;
 		}
-		
+		if (c == -1) return -1;
 		return target;
 	}
 }
