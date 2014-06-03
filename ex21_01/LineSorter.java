@@ -20,7 +20,7 @@ public class LineSorter {
 		int len = 256;
 		char[] cbuf = new char[len];
 		while ((c = lfr.read(cbuf, 0, len)) != -1) {
-			String str = new String(cbuf).substring(0, c);
+			String str = new String(cbuf).substring(0, c - 1);
 			set.add(str);
 		}
 	}

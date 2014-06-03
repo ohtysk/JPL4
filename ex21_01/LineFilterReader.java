@@ -17,9 +17,9 @@ public class LineFilterReader extends FilterReader {
 		int target = 0;
 
 		while ((c = super.read()) != -1) {
+			if (c == '\n' || target == len) break;
 			cbuf[off + target] = (char)c;
 			target++;
-			if (c == '\n' || target == len) break;
 		}
 		if (c == -1) return -1;
 		return target;

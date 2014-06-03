@@ -13,7 +13,7 @@ public class LineSorterTest {
 		LineSorter ls = new LineSorter("LineSorter.java");
 		List<String> list = ls.getList();
 		for (String line : list)
-			System.out.print(line);
+			System.out.println(line);
 	}
 
 }

@@ -16,9 +16,8 @@ public class LineFilterReaderTest {
 		int len = 256;
 		char[] cbuf = new char[len];
 		while ((c = lfr.read(cbuf, 0, len)) != -1) {
-			System.out.print(c + " ");
-			for (int i = 0; i < c; i++)
-				System.out.print(cbuf[i]);
+			String str = new String(cbuf).substring(0, c);
+			System.out.print(c + " " + str);			
 		}
 	}
 
