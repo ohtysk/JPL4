@@ -25,8 +25,9 @@ public class DataHandler {
 	}
 	
 	private byte[] readBytesFromFile(File file) throws IOException {
-		byte[] data = new byte[1024 * 1024 * 20];
 		FileInputStream fis = new FileInputStream(file);
+		int length = fis.available();
+		byte[] data = new byte[length];
 		fis.read(data);
 		return data;
 	}
