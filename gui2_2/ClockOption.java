@@ -91,11 +91,11 @@ public class ClockOption extends JDialog {
 		contentPanel.setLayout(null);
 		
 		JLabel lblFont = new JLabel("Font");
-		lblFont.setBounds(86, 62, 50, 13);
+		lblFont.setBounds(86, 62, 103, 13);
 		contentPanel.add(lblFont);
 		
 		JLabel lblFontSize = new JLabel("Font Size");
-		lblFontSize.setBounds(86, 97, 50, 13);
+		lblFontSize.setBounds(86, 97, 103, 13);
 		contentPanel.add(lblFontSize);
 		
 		JLabel lblForegroundColor = new JLabel("Foreground Color");
