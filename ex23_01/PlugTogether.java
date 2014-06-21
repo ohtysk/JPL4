@@ -12,9 +12,10 @@ public class PlugTogether {
 		new Thread() {
 			public void run() {
 				byte[] buf = new byte[256];
+				int length = 0;
 				try {
-					while(is.read(buf) != -1) {
-						os.write(buf);
+					while((length = is.read(buf)) != -1) {
+						os.write(buf, 0, length);
 					}
 				} catch (IOException e) {
 					e.printStackTrace();
