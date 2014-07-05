@@ -1,0 +1,4 @@
+Name1 + 5
+Name2 + 7
+Name3 - 5
+Name2 = 9
