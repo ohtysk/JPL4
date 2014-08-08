@@ -1,26 +1,21 @@
+
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.lang.ref.WeakReference;
+import java.util.Map;
+import java.util.WeakHashMap;
 
 
 public class DataHandler {
-	private WeakReference<File> lastFile;
-	private WeakReference<byte[]> lastData;
+	private Map<File, byte[]> cash = new WeakHashMap<File, byte[]>();
 
 	public byte[] readFile(File file) throws IOException {
-		byte[] data;
-
-		if (lastFile != null && lastFile.get() != null && file.equals(lastFile.get())) {
-			data = lastData.get();
-			if (data != null)
-				return data;
+		cash.remove(null);
+		byte[] data = cash.get(file);
+		if (data == null) {
+			data = readBytesFromFile(file);
+			cash.put(file, data);
 		}
-
-		data = readBytesFromFile(file);
-		lastFile = new WeakReference<File>(file);
-		lastData = new WeakReference<byte[]>(data);
 		return data;
 	}
 
