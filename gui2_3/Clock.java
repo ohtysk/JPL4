@@ -17,6 +17,7 @@ import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JWindow;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
@@ -27,6 +28,7 @@ public class Clock extends JWindow {
 	final private JWindow frame;
 	final private JPanel contentPane;
 	final private MouseAdapter mouseLisner;
+	final private JPopupMenu popup = new JPopupMenu();
 	private Font font;
 	private Color foregroundColor;
 	private Color backbroundColor;
@@ -61,7 +63,19 @@ public class Clock extends JWindow {
 	 */
 	public Clock() {
 		frame = this;
-		mouseLisner = new DragWindowListener(this);
+		
+		JMenuItem quitMenu = new JMenuItem("Quit");
+		quitMenu.addActionListener(new ActionListener() {
+			@SuppressWarnings("deprecation")
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				frame.disable();
+				System.exit(0);
+			}
+		});
+		popup.add(quitMenu);
+		
+		mouseLisner = new ClockWindowListener(this, popup);
 		frame.addMouseListener(mouseLisner);
 		frame.addMouseMotionListener(mouseLisner);
 		
@@ -117,17 +131,32 @@ public class Clock extends JWindow {
 		}
 	}
 
-	class DragWindowListener extends MouseAdapter {
+	class ClockWindowListener extends MouseAdapter {
 		private final Point startPt = new Point();
 		private final JWindow window;
+		private final JPopupMenu popup;
 		
-		DragWindowListener(JWindow window) {
+		ClockWindowListener(JWindow window, JPopupMenu popup) {
 			this.window = window;
+			this.popup = popup;
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent me) {
+			if (me.isPopupTrigger()) {
+				popup.show(me.getComponent(), me.getX(), me.getY());
+			} else {
+				startPt.setLocation(me.getPoint());
+			}
 		}
 
 		@Override
 		public void mousePressed(MouseEvent me) {
-			startPt.setLocation(me.getPoint());
+			if (me.isPopupTrigger()) {
+				popup.show(me.getComponent(), me.getX(), me.getY());
+			} else {
+				startPt.setLocation(me.getPoint());
+			}
 		}
 
 		@Override
@@ -136,4 +165,5 @@ public class Clock extends JWindow {
 			window.setLocation(eventLocationOnScreen.x - startPt.x, eventLocationOnScreen.y - startPt.y);
 		}
 	}
+	
 }
