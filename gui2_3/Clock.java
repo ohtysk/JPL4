@@ -1,5 +1,6 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -13,11 +14,18 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Date;
 
+import javax.swing.ButtonGroup;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JWindow;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
@@ -25,10 +33,8 @@ import javax.swing.border.EmptyBorder;
 
 
 public class Clock extends JWindow {
-	final private JWindow frame;
+	final private JWindow window;
 	final private JPanel contentPane;
-	final private MouseAdapter mouseLisner;
-	final private JPopupMenu popup = new JPopupMenu();
 	private Font font;
 	private Color foregroundColor;
 	private Color backbroundColor;
@@ -62,22 +68,28 @@ public class Clock extends JWindow {
 	 * Create the frame.
 	 */
 	public Clock() {
-		frame = this;
-		
+		window = this;
+
+		JPopupMenu popup = new JPopupMenu();
+		ClockMenu clockMenu = new ClockMenu(this);
+		popup.add(clockMenu.createFontMenu());
+		popup.add(clockMenu.createSizeMenu());
+		popup.add(clockMenu.createForegroundMenu());
+		popup.add(clockMenu.createBackgroundMenu());
 		JMenuItem quitMenu = new JMenuItem("Quit");
 		quitMenu.addActionListener(new ActionListener() {
 			@SuppressWarnings("deprecation")
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				frame.disable();
+				window.disable();
 				System.exit(0);
 			}
 		});
 		popup.add(quitMenu);
 		
-		mouseLisner = new ClockWindowListener(this, popup);
-		frame.addMouseListener(mouseLisner);
-		frame.addMouseMotionListener(mouseLisner);
+		MouseAdapter mouseLisner = new ClockWindowListener(this, popup);
+		window.addMouseListener(mouseLisner);
+		window.addMouseMotionListener(mouseLisner);
 		
 		setBounds(100, 100, 275, 150);
 		contentPane = new JPanel();
@@ -114,7 +126,7 @@ public class Clock extends JWindow {
 			FontMetrics fm = g.getFontMetrics();
 			int sw = fm.stringWidth(text);
 			int ascent = fm.getAscent();
-			frame.setSize(sw * 3 / 2, ascent * 2 + 50);
+			window.setSize(sw * 3 / 2, ascent * 2 + 50);
 			
 			int w = this.getWidth();
 			int h = this.getHeight();
