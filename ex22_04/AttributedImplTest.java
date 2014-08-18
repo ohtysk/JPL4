@@ -10,21 +10,19 @@ public class AttributedImplTest {
 
 	@Test
 	public void test() throws InterruptedException {
-		final AttributedImpl ai = new AttributedImpl();
-		new Thread(new Runnable() {
-
-			@Override
-			public void run() {
-				AttributedObserver ao = new AttributedObserver(ai);
-				while (true) {
-					
-				}
-			}
-		}).run();
-		for (int i = 0; i < 100; i++) {
+		int times = 50;
+		int spanms = 50;
+		AttributedImpl ai = new AttributedImpl();
+		AttributedObserver ao = new AttributedObserver(ai);
+		ai.addObserver(ao);
+		for (int i = 0; i < times; i++) {
 			Attr newAttr = new Attr(i + "", i);
 			ai.add(newAttr);
-			Thread.sleep(100);
+			Thread.sleep(spanms);
+		}
+		for (int i = 0; i < times; i++) {
+			ai.remove(i + "");
+			Thread.sleep(spanms);
 		}
 	}
 
