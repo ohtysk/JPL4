@@ -9,11 +9,13 @@ public class ReadCSVTable {
 	public static List<String[]> readCSVTable(Reader r, int cells) throws IOException {
 		List<String[]> list = new ArrayList<String[]>();
 		StreamTokenizer st = new StreamTokenizer(r);
-/*		st.ordinaryChars('0', '9');
-		st.ordinaryChar('+');
-		st.ordinaryChar('-');
-		st.ordinaryChar('.');
-*/		st.whitespaceChars(',', ',');
+		st.ordinaryChars('0', '9');
+		st.wordChars('0', '9');
+		st.wordChars('+', '+');
+		st.wordChars('-', '-');
+		st.wordChars('.', '.');
+		st.wordChars(' ', ' ');
+		st.whitespaceChars(',', ',');
 		st.eolIsSignificant(true);
 		int count = 0;
 		String[] buf = new String[cells];
